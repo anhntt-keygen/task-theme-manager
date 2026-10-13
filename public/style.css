@@ -1,0 +1,35 @@
+/* Custom Scrollbar for Tasks Container */
+#tasks-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+#tasks-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#tasks-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+.dark #tasks-container::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+/* Custom transitions for progress bar */
+#progress-bar {
+  transition: stroke-dashoffset 1s linear;
+}
+
+/* Custom input spinner removal */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+```
+
+---
