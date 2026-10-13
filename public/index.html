@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi" class="transition-colors duration-300">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Theme Manager - Pomodoro Focus Timer</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              light: '#ef4444',
+              dark: '#f87171'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300 font-sans">
+
+  <!-- Header -->
+  <header class="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 transition-colors duration-300">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa-solid fa-circle-check text-red-500 text-2xl"></i>
+        <span class="text-xl font-bold tracking-tight">FocusFlow</span>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400" aria-label="Chuyển đổi giao diện">
+          <i id="theme-icon" class="fa-solid fa-moon text-lg text-slate-600 dark:text-yellow-400"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+    
+    <!-- Left Column: Timer & Settings -->
+    <div class="md:col-span-2 space-y-6">
+      
+      <!-- Timer Card -->
+      <div class="bg-white dark:bg-slate-950 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 text-center transition-colors duration-300">
+        <!-- Mode Switcher -->
+        <div class="flex justify-center space-x-2 mb-8 bg-slate-100 dark:bg-slate-900 p-1 rounded-xl">
+          <button id="btn-pomodoro" class="flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 bg-white dark:bg-slate-800 shadow-sm text-red-500 dark:text-red-400">
+            Pomodoro
+          </button>
+          <button id="btn-short" class="flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
+            Nghỉ ngắn
+          </button>
+          <button id="btn-long" class="flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
+            Nghỉ dài
+          </button>
+        </div>
+
+        <!-- Circular Progress & Timer Display -->
+        <div class="relative w-64 h-64 mx-auto mb-8 flex items-center justify-center">
+          <svg class="w-full h-full transform -rotate-90">
+            <circle cx="128" cy="128" r="116" stroke-width="8" stroke="currentColor" class="text-slate-100 dark:text-slate-800" fill="transparent" />
+            <circle id="progress-bar" cx="128" cy="128" r="116" stroke-width="8" stroke="currentColor" class="text-red-500 dark:text-red-400 transition-all duration-300" fill="transparent" stroke-dasharray="728.8" stroke-dashoffset="0" stroke-linecap="round" />
+          </svg>
+          <div class="absolute flex flex-col items-center justify-center">
+            <span id="timer-display" class="text-5xl font-bold tracking-tighter tabular-nums">25:00</span>
+            <span id="timer-status" class="text-xs font-semibold tracking-widest uppercase text-slate-400 dark:text-slate-500 mt-2">Sẵn sàng</span>
+          </div>
+        </div>
+
+        <!-- Timer Controls -->
+        <div class="flex justify-center items-center space-x-4">
+          <button id="btn-reset" class="p-3 rounded-full bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all" title="Đặt lại">
+            <i class="fa-solid fa-rotate-right text-lg"></i>
+          </button>
+          <button id="btn-start-pause" class="px-8 py-3.5 rounded-full bg-red-500 hover:bg-red-600 text-white font-semibold shadow-lg shadow-red-500/20 dark:shadow-red-900/30 transition-all transform active:scale-95">
+            Bắt đầu
+          </button>
+          <button id="btn-skip" class="p-3 rounded-full bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-all" title="Bỏ qua">
+            <i class="fa-solid fa-forward text-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Settings Card -->
+      <div class="bg-white dark:bg-slate-950 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+        <h2 class="text-lg font-bold mb-4 flex items-center space-x-2">
+          <i class="fa-solid fa-sliders text-slate-400"></i>
+          <span>Cấu hình thời gian (Phút)</span>
+        </h2>
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Pomodoro</label>
+            <input type="number" id="input-pomodoro" min="1" max="180" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all" value="25">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Nghỉ ngắn</label>
+            <input type="number" id="input-short" min="1" max="180" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all" value="5">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Nghỉ dài</label>
+            <input type="number" id="input-long" min="1" max="180" class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all" value="15">
+          </div>
+        </div>
+        <div id="config-error" class="hidden mt-3 text-xs text-red-500 font-medium flex items-center space-x-1">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Thời gian phải nằm trong khoảng từ 1 đến 180 phút!</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: To-Do List & Stats -->
+    <div class="space-y-6">
+      
+      <!-- Stats Card -->
+      <div class="bg-white dark:bg-slate-950 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+        <h2 class="text-lg font-bold mb-4 flex items-center space-x-2">
+          <i class="fa-solid fa-chart-simple text-slate-400"></i>
+          <span>Hiệu suất hôm nay</span>
+        </h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl text-center">
+            <span class="block text-2xl font-bold text-red-500 dark:text-red-400" id="stat-completed-pomodoros">0</span>
+            <span class="text-xs text-slate-500 dark:text-slate-400">Phiên hoàn thành</span>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl text-center">
+            <span class="block text-2xl font-bold text-slate-700 dark:text-slate-300" id="stat-total-minutes">0</span>
+            <span class="text-xs text-slate-500 dark:text-slate-400">Phút tập trung</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task List Card -->
+      <div class="bg-white dark:bg-slate-950 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors duration-300 flex flex-col min-h-[350px]">
+        <h2 class="text-lg font-bold mb-4 flex items-center space-x-2">
+          <i class="fa-solid fa-list-check text-slate-400"></i>
+          <span>Danh sách tác vụ</span>
+        </h2>
+
+        <!-- Task Input Form -->
+        <form id="task-form" class="flex space-x-2 mb-4">
+          <input type="text" id="task-input" placeholder="Thêm tác vụ mới..." required class="flex-1 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all text-sm">
+          <button type="submit" class="px-4 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-lg font-medium hover:bg-slate-800 dark:hover:bg-white transition-all text-sm">
+            Thêm
+          </button>
+        </form>
+
+        <!-- Tasks Container -->
+        <div id="tasks-container" class="space-y-2 flex-1 overflow-y-auto max-h-[240px] pr-1">
+          <!-- Dynamic tasks will be injected here -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
+```
+
+---
