@@ -1,0 +1,20 @@
+{
+  "name": "task-theme-manager",
+  "version": "1.0.0",
+  "description": "Pomodoro Focus Timer with Task Management and Dark Mode Theme",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.42.1"
+  },
+  "private": true
+}
+```
+
+---
